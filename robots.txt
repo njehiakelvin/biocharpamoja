@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /assets/php/
+Disallow: /assets/vendor/
+Disallow: /.env
+Disallow: /run-once-rehash.php
+
+Sitemap: https://biocharpamoja.co.ke/sitemap.xml

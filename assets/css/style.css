@@ -1,0 +1,452 @@
+/* =========================================
+   1. VARIABLES & RESET
+   ========================================= */
+:root {
+    /* Brand Colors */
+    --primary-green: #198754;
+    --logo-teal: #008B8B;
+    --logo-orange: #E65100;
+    
+    /* Light Mode Variables */
+    --bg-body: #ffffff;
+    --bg-card: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --text-main: #212529;
+    --text-muted: #6c757d;
+    --nav-bg: rgba(255, 255, 255, 0.98);
+    --border-color: #dee2e6;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Dark Mode Variables */
+body.dark-mode {
+    --bg-body: #121212;
+    --bg-card: #1e1e1e;
+    --bg-secondary: #2d2d2d;
+    --text-main: #e0e0e0;
+    --text-muted: #b0b0b0;
+    --nav-bg: rgba(18, 18, 18, 0.98);
+    --border-color: #404040;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Global Reset */
+body {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
+    padding-top: 80px;
+}
+
+a {
+    color: var(--primary-green);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: var(--logo-orange);
+}
+
+/* =========================================
+   2. LOADER
+   ========================================= */
+#loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-body);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    transition: opacity 0.5s ease-out, visibility 0.5s;
+}
+
+#loader-wrapper.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* =========================================
+   3. NAVIGATION
+   ========================================= */
+#header {
+    background-color: var(--nav-bg);
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand {
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--text-main) !important;
+    letter-spacing: 1px;
+}
+
+.navbar-brand span {
+    color: var(--primary-green);
+}
+
+.nav-link {
+    color: var(--text-main) !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    padding: 10px 15px !important;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--primary-green) !important;
+}
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-main);
+    cursor: pointer;
+}
+
+/* =========================================
+   4. HOME PAGE & IMAGES (Fixed Sizes)
+   ========================================= */
+/* Hero Carousel Image - Fixed Height */
+.hero-carousel-img {
+    height: 500px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 30px;
+}
+
+/* Project Card Image - Fixed Height */
+.project-card-img {
+    height: 250px;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Stats Section */
+#stats {
+    background: linear-gradient(135deg, var(--primary-green), var(--logo-teal));
+    color: white;
+    padding: 80px 0;
+    margin-top: 0;
+    
+}
+
+#stats .stat-item {
+    text-align: center;
+    padding: 20px;
+    transition: transform 0.3s;
+}
+
+#stats .stat-item:hover {
+    transform: translateY(-5px);
+}
+
+#stats i {
+    font-size: 2.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    display: inline-block;
+    backdrop-filter: blur(5px);
+}
+
+#stats h2 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+#stats p {
+    font-size: 1.1rem;
+    font-weight: 500;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* =========================================
+   5. CONTACT PAGE & DARK MODE FORMS
+   ========================================= */
+.contactcard {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    height: 100%;
+}
+
+.contactcard ul {
+    list-style: none;
+    padding: 0;
+}
+
+.contactcard li {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.contactcard i {
+    color: var(--primary-green);
+    font-size: 1.2rem;
+    margin-right: 15px;
+    width: 25px;
+    text-align: center;
+}
+.project-card{
+    background-color: var(--bg-card);
+}
+
+/* Form Styling */
+.form-floating > .form-control {
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+}
+
+.form-floating > .form-control:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+
+.form-floating > label {
+    color: var(--text-muted);
+}
+
+/* Dark Mode Specific Overrides for Forms */
+body.dark-mode .form-control {
+    background-color: #2d2d2d;
+    border-color: #404040;
+    color: #e0e0e0;
+}
+
+body.dark-mode .form-control:focus {
+    background-color: #333;
+    color: #fff;
+}
+
+body.dark-mode .form-floating label {
+    color: #b0b0b0;
+}
+
+
+/* =========================================
+   6. FOOTER
+   ========================================= */
+#footer {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+    padding: 80px 0 20px;
+    margin-top: 80px;
+}
+
+#footer h2 {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--primary-green);
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+#footer ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+#footer li { margin-bottom: 12px; }
+
+#footer a {
+    color: #b0b0b0 !important;
+    text-decoration: none;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+#footer a:hover {
+    color: var(--primary-green) !important;
+    padding-left: 8px;
+}
+
+/* =========================================
+   7. TIMELINE (About Page)
+   ========================================= */
+.timeline {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 0;
+}
+
+.timeline::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    background-color: var(--primary-green);
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    margin-left: -2px;
+}
+
+.timeline-container {
+    padding: 10px 40px;
+    position: relative;
+    background-color: inherit;
+    width: 50%;
+}
+
+.timeline-left { left: 0; }
+.timeline-right { left: 50%; }
+
+.timeline-container::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: -10px;
+    background-color: var(--bg-body);
+    border: 4px solid var(--logo-orange);
+    top: 25px;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.timeline-right::after { left: -10px; }
+
+.timeline-content {
+    padding: 20px 30px;
+    background-color: var(--bg-card);
+    position: relative;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.timeline-year {
+    color: var(--primary-green);
+    font-weight: 900;
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.timeline-title {
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text-main);
+}
+
+.timeline-text { color: var(--text-muted); }
+
+/* =========================================
+   8. MEDIA QUERIES (Responsive)
+   ========================================= */
+@media screen and (max-width: 991px) {
+    #header { height: auto; padding: 10px 0; }
+    
+    /* Hero Image on Mobile */
+    .hero-carousel-img { height: 350px; }
+    
+    #home h2 { font-size: 2.5rem; }
+}
+
+@media screen and (max-width: 768px) {
+    .timeline::after { left: 31px; }
+    .timeline-container { width: 100%; padding-left: 70px; padding-right: 25px; }
+    .timeline-container::after { left: 21px; }
+    .timeline-right { left: 0%; }
+    
+    /* Stats on Mobile */
+    #stats h2 { font-size: 2.5rem; }
+    #stats p { font-size: 0.9rem; }
+}
+section{
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+/* portfolio grids */
+
+#portfolio-grid .card,
+#portfolio-grid .accordion-body{
+    background-color: var(--bg-card);
+}
+
+
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25d366;
+    color: #FFF;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 2px 2px 3px rgba(0,0,0,0.3);
+    z-index: 1000;
+    transition: 0.3s;
+}
+
+.whatsapp-float:hover {
+    background-color: #128C7E;
+    color: white;
+}
+
+
+
+.pagination .page-link {
+    color: var(--primary-green);
+    background-color: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+.pagination .page-link:hover {
+    color: var(--logo-orange);
+    background-color: var(--bg-secondary);
+}
+
+.pagination .active .page-link {
+    background-color: var(--primary-green) !important;
+    border-color: var(--primary-green) !important;
+    color: white !important;
+}
+
+body.dark-mode .pagination .page-link {
+    background-color: var(--bg-card);
+    border-color: #404040;
+    color: #e0e0e0;
+}
+
+body.dark-mode .page-item.disabled .page-link {
+    background-color: #2d2d2d;
+    color: #6c757d;
+}

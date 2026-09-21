@@ -1,6 +1,6 @@
 /vendor
 .DS_Store
 .env
-*
+-e *
 !.gitignore
 /config

@@ -1,5 +1,4 @@
 deployment:
   tasks:
     - export GIT_WORK_TREE=/home/romfdgrb/public_html
-    - rm -rf /home/romfdgrb/public_html/*
     - git checkout -f HEAD

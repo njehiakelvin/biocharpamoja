@@ -47,3 +47,35 @@ window.addEventListener("load", () => {
         }
     }, 1500); 
 });
+// ── Lazy image loading ──────────────────────────────────────────
+(function() {
+    // Add lazy class to all content images not already marked
+    document.querySelectorAll('img:not([loading])').forEach(img => {
+        img.setAttribute('loading', 'lazy');
+        img.classList.add('lazy');
+        if (img.complete) {
+            img.classList.add('loaded');
+        } else {
+            img.addEventListener('load', () => img.classList.add('loaded'));
+        }
+    });
+
+    // IntersectionObserver for browsers that need it
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                    }
+                    img.classList.add('loaded');
+                    observer.unobserve(img);
+                }
+            });
+        }, { rootMargin: '200px' });
+
+        document.querySelectorAll('img.lazy').forEach(img => observer.observe(img));
+    }
+})();

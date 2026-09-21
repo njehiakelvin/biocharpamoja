@@ -1,7 +1,19 @@
 <?php
-// admin/login.php
+// admin/login.php — DEBUG VERSION (remove error_reporting lines when fixed)
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
-include '../assets/php/db_connect.php';
+
+// Test DB connection before anything else
+require_once '../assets/php/db_connect.php';
+
+if (!$conn) {
+    die('DB connection object missing — check db_connect.php');
+}
+if ($conn->connect_error) {
+    die('DB connection failed: ' . $conn->connect_error);
+}
 
 // If already logged in, go straight to dashboard
 if (isset($_SESSION['user_id'])) {
@@ -10,27 +22,52 @@ if (isset($_SESSION['user_id'])) {
 }
 
 $error = "";
+$debug = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    // Check if users table exists
+    $table_check = $conn->query("SHOW TABLES LIKE 'users'");
+    if ($table_check->num_rows === 0) {
+        $error = "DEBUG: 'users' table does not exist.";
+    } else {
+        $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE username = ?");
+        if (!$stmt) {
+            $error = "DEBUG: Prepare failed: " . $conn->error;
+        } else {
+            $stmt->bind_param("s", $username);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-    if ($result->num_rows === 1) {
-        $user = $result->fetch_assoc();
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['user_id']  = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            header("Location: dashboard.php");
-            exit();
+            if ($result->num_rows === 0) {
+                $error = "DEBUG: No user found with username: " . htmlspecialchars($username);
+            } else {
+                $user = $result->fetch_assoc();
+                $stored_pass = $user['password'];
+                $is_hashed = (strlen($stored_pass) === 60 && $stored_pass[0] === '$');
+                $debug = "DEBUG: Password in DB is " . ($is_hashed ? "bcrypt hashed (correct)" : "PLAIN TEXT — needs rehashing") . ". Length: " . strlen($stored_pass);
+
+                if ($is_hashed && password_verify($password, $stored_pass)) {
+                    $_SESSION['user_id']  = $user['id'];
+                    $_SESSION['username'] = $user['username'];
+                    header("Location: dashboard.php");
+                    exit();
+                } elseif (!$is_hashed && $password === $stored_pass) {
+                    // Plain text match — log them in but warn
+                    $debug .= " — PLAIN TEXT MATCH. Run run-once-rehash.php to fix.";
+                    $_SESSION['user_id']  = $user['id'];
+                    $_SESSION['username'] = $user['username'];
+                    header("Location: dashboard.php");
+                    exit();
+                } else {
+                    $error = "Invalid username or password.";
+                }
+            }
+            $stmt->close();
         }
     }
-    $error = "Invalid username or password.";
-    if (isset($stmt)) $stmt->close();
 }
 ?>
 <!DOCTYPE html>
@@ -44,11 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <style>
         :root { --bp-green: #2d6a4f; --bp-mid: #40916c; --bp-light: #d8f3dc; }
         body { background: #f0f4f2; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        .login-card {
-            width: 100%; max-width: 400px; padding: 2.5rem;
-            border-radius: 12px; background: #fff;
-            box-shadow: 0 4px 24px rgba(0,0,0,.08);
-        }
+        .login-card { width: 100%; max-width: 420px; padding: 2.5rem; border-radius: 12px; background: #fff; box-shadow: 0 4px 24px rgba(0,0,0,.08); }
         .login-logo { text-align: center; margin-bottom: 1.5rem; }
         .login-logo .icon { width: 56px; height: 56px; background: var(--bp-light); border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--bp-green); margin-bottom: .75rem; }
         .login-logo h5 { font-weight: 700; color: #1a2e25; margin: 0; }
@@ -58,6 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         .form-control:focus { border-color: var(--bp-mid); box-shadow: 0 0 0 3px rgba(64,145,108,.15); }
         .btn-login { background: var(--bp-green); border-color: var(--bp-green); padding: 10px; font-weight: 600; border-radius: 8px; }
         .btn-login:hover { background: var(--bp-mid); border-color: var(--bp-mid); }
+        .debug-box { background: #fff8e1; border: 1px solid #ffe082; border-radius: 8px; padding: 12px; font-size: .8rem; font-family: monospace; margin-bottom: 16px; color: #5d4037; }
     </style>
 </head>
 <body>
@@ -68,8 +102,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <small>Admin Panel</small>
     </div>
 
+    <?php if ($debug): ?>
+    <div class="debug-box"><?php echo $debug; ?></div>
+    <?php endif; ?>
+
     <?php if ($error): ?>
-    <div class="alert alert-danger py-2 text-center" style="font-size:.88rem;"><?php echo htmlspecialchars($error); ?></div>
+    <div class="alert alert-danger py-2 text-center" style="font-size:.88rem;"><?php echo $error; ?></div>
     <?php endif; ?>
 
     <form action="login.php" method="POST">
